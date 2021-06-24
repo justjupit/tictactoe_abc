@@ -4,12 +4,23 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import org.w3c.dom.Text;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -25,6 +36,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView textViewplayer1;
     private TextView textViewplayer2;
 
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    Map<String, Object> user1 = new HashMap<>();
+    Map<String, Object> user2 = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         textViewplayer1 = findViewById(R.id.text_view_p1);
         textViewplayer2 = findViewById(R.id.text_view_p2);
+
+        receiveScoreData();
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -44,10 +60,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         Button buttonReset = findViewById(R.id.button_reset);
+        Button buttonSave = findViewById(R.id.button_save);
+
         buttonReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 resetGame();
+            }
+        });
+
+        buttonSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // String p1p = new String(String.valueOf(player1Points));
+               // String p2p = new String(String.valueOf(player2Points));
+                user1.put("score",player1Points);
+                user2.put("score",player2Points);
+
+                db.collection("tictactoe")
+                        .document("player 1")
+                        .set(user1);
+
+                db.collection("tictactoe")
+                        .document("player 2")
+                        .set(user2);
             }
         });
     }
@@ -152,6 +188,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         player2Points = 0;
         updatePointsText();
         resetBoard();
+    }
+
+    private void receiveScoreData(){
+        db.collection("tictactoe")
+                .document("player 1")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DocumentSnapshot document = task.getResult();
+                            player1Points = document.getLong("score").intValue();
+                            textViewplayer1.setText("player 1: " + player1Points);
+                            //textViewplayer2.setText("player 2: " + player2Points);
+                        }
+                    }
+                });
+
+        db.collection("tictactoe")
+                .document("player 2")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DocumentSnapshot document = task.getResult();
+                            player2Points = document.getLong("score").intValue();
+                            textViewplayer2.setText("player 2: " + player2Points);
+                        }
+                    }
+                });
     }
 
     @Override

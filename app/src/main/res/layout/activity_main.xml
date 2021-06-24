@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -15,34 +15,34 @@
             android:id="@+id/text_view_p1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
             android:freezesText="true"
             android:text="Player 1: 0"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            app:layout_constraintBottom_toTopOf="@+id/text_view_p2"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/text_view_p2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_view_p1"
-            android:layout_marginTop="-3dp"
             android:freezesText="true"
             android:text="Player 2: 0"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_p1" />
 
-        <Button
-            android:id="@+id/button_reset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="23dp"
-            android:layout_marginEnd="28dp"
-            android:layout_marginRight="28dp"
-            android:text="reset"
-            app:backgroundTint="#E6C7C7" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="217dp"
+            android:layout_height="92dp"
+            android:foregroundGravity="center|right"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/xoxo" />
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -154,5 +154,31 @@
             app:backgroundTint="#FADCDC" />
 
     </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_reset"
+            android:layout_width="168dp"
+            android:layout_height="88dp"
+            android:layout_marginEnd="30dp"
+            android:text="reset"
+            app:backgroundTint="#E6C7C7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_save"
+            android:layout_width="168dp"
+            android:layout_height="88dp"
+            android:layout_marginStart="30dp"
+            android:text="Save"
+            app:backgroundTint="#E6C7C7"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
